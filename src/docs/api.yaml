@@ -466,7 +466,7 @@ paths:
                                     - properties:
                                           message:
                                               type: string
-                                              example: Please check your email inbox
+                                              example: Your request has been processed. Please check your email to reset password!
                                           data:
                                               type: array
                                               example: []
@@ -724,3 +724,6 @@ components:
                 data:
                     type: array
                     example: []
+                meta:
+                    type: object
+                    example: {}
