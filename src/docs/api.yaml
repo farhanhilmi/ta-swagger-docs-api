@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+    version: '1'
+    title: P2P Lending Syariah API
+    description: API for TA
+servers:
+    # Added by API Auto Mocking Plugin
+    - description: SwaggerHub API Auto Mocking
+      url: https://virtserver.swaggerhub.com/FARHANHILMI077/BackendAPI/1
+tags:
+    - name: authentications
+      description: Operations about user
+      # externalDocs:
+      #   description: Find out more
+      #   url: 'http://swagger.io'
+    - name: borrowers
+      description: Operations about borrower
+    - name: lenders
+      description: Operations about lender
+    - name: loans
+      description: Operations about loans
+    - name: balance
+      description: Operations about balance
+
+paths:
+    /authentication/login?action=email-otp:
+        post:
+            tags:
+                - authentications
+            summary: User login API to send OTP to user email
+            operationId: login
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your email is not registered.
+                '403':
+                    description: User not verified
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account is not verified. Please check your email to verify your account.
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email,password is required!
+                '200':
+                    description: User found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: OTP has been sent to your email
+                                          data:
+                                              type: object
+                                              properties:
+                                                  userId:
+                                                      type: string
+                                                      example: 64041cb5e5230c4c803c56b1
+                                                  otpExpired:
+                                                      type: string
+                                                      example: 2023-03-05T11:47:31+0700
+
+            requestBody:
+                description: User login with credentials
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UserLogin'
+                required: true
+
+    # User verify OTP to gain access token
+    /authentication/login?action=login:
+        post:
+            tags:
+                - authentications
+            summary: Verify OTP to gain access token and refresh token
+            operationId: verifyLogin
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your email is not registered.
+                '403':
+                    description: User not verified
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account is not verified. Please check your email to verify your account.
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email,otp is required!
+                '200':
+                    description: Success login and get access token and refresh token
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Login success
+                                          data:
+                                              type: object
+                                              properties:
+                                                  accessToken:
+                                                      type: string
+                                                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2VkYzkyYjc5MjYyMjRhNzE4OGI0YWYiLCJyb2xlcyI6ImJvcnJvd2VyIiwiaWF0IjoxNjc2NTI5MjgyLCJleHAiOjE2NzY2MTU2ODJ9.5j-_2kXbEXB3zsXSZC7q8i6rOQvxEtlHtq3X7CsOZng
+                                                  refreshToken:
+                                                      type: string
+                                                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2VkYzkyYjc5MjYyMjRhNzE4OGI0YWYiLCJyb2xlcyI6ImJvcnJvd2VyIiwiaWF0IjoxNjc2NTI5MjgyLCJleHAiOjE2NzkxMjEyODJ9.4sstVsYCK01F--fWJbog22onNnpJzPgazLXtVOJPnj8
+
+            requestBody:
+                description: User login with credentials
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UserLogin'
+                required: true
+
+components:
+    schemas:
+        UserLogin:
+            type: object
+            properties:
+                email:
+                    type: string
+                    example: user@mail.com
+                password:
+                    type: string
+                    example: password@123
+        ApiResponse:
+            type: object
+            properties:
+                status:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    type: array
+                    items: {}
+        ResponseError:
+            type: object
+            properties:
+                status:
+                    type: boolean
+                    example: false
+                message:
+                    type: string
+                    example: Response message
+                data:
+                    type: array
+                    example: []
