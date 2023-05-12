@@ -5,11 +5,13 @@ info:
     description: API for TA
 servers:
     # Added by API Auto Mocking Plugin
-    - description: SwaggerHub API Auto Mocking
-      url: https://virtserver.swaggerhub.com/FARHANHILMI077/BackendAPI/1
+    - description: GCP Production Server
+      url: https://ta-backend-p2p.an.r.appspot.com/api
+    - description: Local Server
+      url: localhost:800/api
 tags:
     - name: authentications
-      description: Operations about user
+      description: Operations about user authentications
       # externalDocs:
       #   description: Find out more
       #   url: 'http://swagger.io'
@@ -128,6 +130,7 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
+
                 '404':
                     description: User not found
                     content:
@@ -191,11 +194,502 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UserLogin'
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: isco@yopmail.com
+                                otp:
+                                    description: user input OTP
+                                    type: string
+                                    example: 31349
+                required: true
+
+    /authentication/register:
+        post:
+            tags:
+                - authentications
+            summary: Register new user
+            operationId: register
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: phoneNumber is required!
+                '201':
+                    description: Success create new user
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Register success. Please check your email to verify your account.
+                                          data:
+                                              type: object
+                                              allOf:
+                                                  - $ref: '#/components/schemas/User'
+                                                  - type: object
+                                                    properties:
+                                                        createdDate:
+                                                            type: string
+                                                            example: 2023-03-05T03:47:17.400Z
+                                                        updatedDate:
+                                                            type: string
+                                                            example: 2023-03-05T03:47:17.400Z
+
+            requestBody:
+                description: Payload to register new user
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UserCreation'
+
+                required: true
+
+    /authentication/otp/email/verify:
+        post:
+            tags:
+                - authentications
+            summary: Verify OTP after register new account
+            operationId: register
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: otp is required!
+                '200':
+                    description: Success verified email
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success verified user email!
+                                          data:
+                                              type: array
+                                              example: []
+
+            requestBody:
+                description: Payload to verify account with OTP
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                userId:
+                                    type: string
+                                    example: w8817381223n8ude
+                                otp:
+                                    description: user input OTP
+                                    type: string
+                                    example: 31349
+                required: true
+
+    /authentication/token/refresh:
+        post:
+            tags:
+                - authentications
+            summary: Refresh access token with refresh token
+            operationId: refreshToken
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '401':
+                    description: Token expired or invalid
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your token is invalid or expired!. Please login again!
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your email is not registered yet!
+
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: refreshToken is required!
+                '200':
+                    description: success generate new access token
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success generate new access token
+                                          data:
+                                              type: object
+                                              properties:
+                                                  accessToken:
+                                                      type: string
+                                                      example: thisisnewaccesstoken
+                                                  refreshToken:
+                                                      type: string
+                                                      example: thisisnewrefreshtoken
+
+            requestBody:
+                description: Refresh token
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                refreshToken:
+                                    type: string
+                                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2VkYzkyYjc5MjYyMjRhNzE4OGI0YWYiLCJyb2xlcyI6ImJvcnJvd2VyIiwiaWF0IjoxNjc2NTI5MDEwLCJleHAiOjE2NzkxMjEwMTB9.QNoEF0AHPguIT6HlfFvqtxlmp4TaalkXNMyawf-tt34
+                required: true
+
+    /authentication/password/reset/request:
+        post:
+            tags:
+                - authentications
+            summary: User request to reset password
+            operationId: forgetPassword
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email,platform is required!
+                '200':
+                    description: If user forgot password, user can request reset password. This endpoint will send link to user email to reset password
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Please check your email inbox
+                                          data:
+                                              type: array
+                                              example: []
+
+            requestBody:
+                description: Payload to request reset password
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: user@mail.com
+                                platform:
+                                    type: string
+                                    enum:
+                                        - mobile
+                                        - website
+                                    example: website
+                required: true
+
+    /authentication/password/reset/change:
+        post:
+            tags:
+                - authentications
+            summary: Change password after user request to reset password
+            operationId: forgetPassword
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email,token is required!
+                '401':
+                    description: Unauthorized because token is invalid
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: token is invalid!
+
+                '404':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email not found!
+
+                '200':
+                    description: Success change password after user request to reset password
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success change password
+                                          data:
+                                              type: object
+                                              properties:
+                                                  _id:
+                                                      type: string
+                                                      example: 640410c5465ed9af9ccb8912
+                                                  email:
+                                                      type: string
+                                                      example: user@mail.com
+                                                  name:
+                                                      type: string
+                                                      example: user
+                                                  roles:
+                                                      type: string
+                                                      example: lender
+
+            requestBody:
+                description: Payload to change password
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                token:
+                                    type: string
+                                    example: 71f90b490af811ba0193a2b7c6795809b32a724f79e36cb15df8da59b474a1e1
+                                email:
+                                    type: string
+                                    example: user@mail.com
+                                newPassword:
+                                    type: string
+                                    example: 123@dkadD
+                                userId:
+                                    type: string
+                                    example: 64045abe8ebbd57738f9f091
                 required: true
 
 components:
     schemas:
+        User:
+            allOf:
+                - $ref: '#/components/schemas/UserCreation'
+                - type: object
+                  properties:
+                      _id:
+                          type: string
+                          example: 640410c5465ed9af9ccb8912
+                      verified:
+                          type: boolean
+                          example: false
+        UserCreation:
+            type: object
+            properties:
+                email:
+                    type: string
+                    example: ramos@mail.com
+                name:
+                    type: string
+                    example: Sergio Ramos
+                phoneNumber:
+                    type: string
+                    example: 628123456789
+                roles:
+                    type: string
+                    example: lender
+                password:
+                    type: string
+                    example: password@123
+
+        Borrower:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 640410c5465ed9af9ccb8955
+                userId:
+                    type: string
+                    example: 640410c5465ed9af9ccb8912
+                loanLimit:
+                    type: string
+                    example: 10000000
+                income:
+                    type: string
+                    example: 15000000
+                status:
+                    type: string
+                    example: on request
+
+        Lender:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 640410c5465ed9af9ccb8955
+                userId:
+                    type: string
+                    example: 640410c5465ed9af9ccb8912
+
+        Loan:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 640410c5465ed9af9ccb8955
+                userId:
+                    type: string
+                    example: 640410c5465ed9af9ccb8912
+                loanPurpose:
+                    type: string
+                    example: Biaya Nikahan Untuk Anak
+                borrowingCategory:
+                    type: string
+                    enum:
+                        - personal
+                        - business
+                        - education
+                    example: personal
+                amount:
+                    type: integer
+                    format: int64
+                    example: 20000000
+                tenor:
+                    type: integer
+                    example: 3
+                interestRate:
+                    type: integer
+                    format: int64
+                    example: 500000
+                status:
+                    type: string
+                    example: on request
+
         UserLogin:
             type: object
             properties:
@@ -214,7 +708,10 @@ components:
                     type: string
                 data:
                     type: array
-                    items: {}
+                    # example: []
+                meta:
+                    type: object
+                    example: {}
         ResponseError:
             type: object
             properties:
