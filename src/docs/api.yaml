@@ -44,7 +44,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '404':
+
+                '409':
                     description: User not found
                     content:
                         application/json:
@@ -55,21 +56,10 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: Your email is not registered.
-                '403':
-                    description: User not verified
-                    content:
-                        application/json:
-                            schema:
-                                allOf:
-                                    - $ref: '#/components/schemas/ResponseError'
-                                    - type: object
-                                      properties:
-                                          message:
-                                              type: string
-                                              example: Your account is not verified. Please check your email to verify your account.
-                '400':
-                    description: Bad request
+                                              example: This e-mail address has already been registered
+
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -81,7 +71,7 @@ paths:
                                               type: string
                                               example: email,password is required!
                 '200':
-                    description: User found
+                    description: Success login and send OTP to user email
                     content:
                         application/json:
                             schema:
@@ -142,8 +132,8 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: Your email is not registered.
-                '403':
+                                              example: Your account is not registered. Please register your account first.
+                '401':
                     description: User not verified
                     content:
                         application/json:
@@ -154,8 +144,8 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: Your account is not verified. Please check your email to verify your account.
-                '400':
+                                              example: OTP code doesn't match. Please check again!
+                '422':
                     description: Bad request
                     content:
                         application/json:
@@ -167,6 +157,18 @@ paths:
                                           message:
                                               type: string
                                               example: email,otp is required!
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: OTP Code is expired
                 '200':
                     description: Success login and get access token and refresh token
                     content:
@@ -224,8 +226,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '400':
-                    description: Bad request
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -236,6 +238,18 @@ paths:
                                           message:
                                               type: string
                                               example: phoneNumber is required!
+                '409':
+                    description: Duplicate email
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: This e-mail address has already been registered
                 '201':
                     description: Success create new user
                     content:
@@ -289,8 +303,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '400':
-                    description: Bad request
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -301,6 +315,45 @@ paths:
                                           message:
                                               type: string
                                               example: otp is required!
+                '401':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: OTP code doesn't match. Please check again!
+
+                '409':
+                    description: Already verified email
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account already verified!
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Account with this userId not found!
+
                 '200':
                     description: Success verified email
                     content:
@@ -314,8 +367,11 @@ paths:
                                               type: string
                                               example: success verified user email!
                                           data:
-                                              type: array
-                                              example: []
+                                              type: object
+                                              properties:
+                                                  verified:
+                                                      type: boolean
+                                                      example: true
 
             requestBody:
                 description: Payload to verify account with OTP
@@ -366,7 +422,7 @@ paths:
                                               example: Your token is invalid or expired!. Please login again!
 
                 '404':
-                    description: User not found
+                    description: Refresh token not found
                     content:
                         application/json:
                             schema:
@@ -376,10 +432,10 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: Your email is not registered yet!
+                                              example: We cannot find your token!
 
-                '400':
-                    description: Bad request
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -443,8 +499,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '400':
-                    description: Bad request
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -455,6 +511,18 @@ paths:
                                           message:
                                               type: string
                                               example: email,platform is required!
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We cannot find an account with that email
                 '200':
                     description: If user forgot password, user can request reset password. This endpoint will send link to user email to reset password
                     content:
@@ -489,11 +557,11 @@ paths:
                                     example: website
                 required: true
 
-    /authentication/password/reset/change:
+    /authentication/password/reset/request/change:
         post:
             tags:
                 - authentications
-            summary: Change password after user request to reset password
+            summary: Change password
             operationId: forgetPassword
             responses:
                 '500':
@@ -508,8 +576,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '400':
-                    description: Bad request
+                '422':
+                    description: Validation Error
                     content:
                         application/json:
                             schema:
@@ -531,7 +599,7 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: token is invalid!
+                                              example: Invalid or expired password reset token
 
                 '404':
                     description: Bad request
@@ -544,7 +612,7 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: email not found!
+                                              example: User with this email not found!
 
                 '200':
                     description: Success change password after user request to reset password
@@ -561,7 +629,7 @@ paths:
                                           data:
                                               type: object
                                               properties:
-                                                  _id:
+                                                  userId:
                                                       type: string
                                                       example: 640410c5465ed9af9ccb8912
                                                   email:
@@ -590,10 +658,110 @@ paths:
                                 newPassword:
                                     type: string
                                     example: 123@dkadD
-                                userId:
-                                    type: string
-                                    example: 64045abe8ebbd57738f9f091
                 required: true
+
+    # /loans/available:
+    #     get:
+    #         tags:
+    #             - loans
+    #         summary: Get all available loans
+    #         operationId: getAvailableLoans
+    #         responses:
+    #             '500':
+    #                 description: Internal server error
+    #                 content:
+    #                     application/json:
+    #                         schema:
+    #                             allOf:
+    #                                 - $ref: '#/components/schemas/ResponseError'
+    #                                 - type: object
+    #                                   properties:
+    #                                       message:
+    #                                           type: string
+    #                                           example: Internal server error
+    #             '422':
+    #                 description: Validation Error
+    #                 content:
+    #                     application/json:
+    #                         schema:
+    #                             allOf:
+    #                                 - $ref: '#/components/schemas/ResponseError'
+    #                                 - type: object
+    #                                   properties:
+    #                                       message:
+    #                                           type: string
+    #                                           example: email,token is required!
+    #             '401':
+    #                 description: Unauthorized because token is invalid
+    #                 content:
+    #                     application/json:
+    #                         schema:
+    #                             allOf:
+    #                                 - $ref: '#/components/schemas/ResponseError'
+    #                                 - type: object
+    #                                   properties:
+    #                                       message:
+    #                                           type: string
+    #                                           example: token is invalid!
+
+    #             '404':
+    #                 description: Not Found
+    #                 content:
+    #                     application/json:
+    #                         schema:
+    #                             allOf:
+    #                                 - $ref: '#/components/schemas/ResponseError'
+    #                                 - type: object
+    #                                   properties:
+    #                                       message:
+    #                                           type: string
+    #                                           example: email not found!
+
+    #             '200':
+    #                 description: Success change password after user request to reset password
+    #                 content:
+    #                     application/json:
+    #                         schema:
+    #                             allOf:
+    #                                 - $ref: '#/components/schemas/ApiResponse'
+    #                                 - type: object
+    #                                 - properties:
+    #                                       message:
+    #                                           type: string
+    #                                           example: success change password
+    #                                       data:
+    #                                           type: object
+    #                                           properties:
+    #                                               userId:
+    #                                                   type: string
+    #                                                   example: 640410c5465ed9af9ccb8912
+    #                                               email:
+    #                                                   type: string
+    #                                                   example: user@mail.com
+    #                                               name:
+    #                                                   type: string
+    #                                                   example: user
+    #                                               roles:
+    #                                                   type: string
+    #                                                   example: lender
+
+    #         requestBody:
+    #             description: Payload to change password
+    #             content:
+    #                 application/json:
+    #                     schema:
+    #                         type: object
+    #                         properties:
+    #                             token:
+    #                                 type: string
+    #                                 example: 71f90b490af811ba0193a2b7c6795809b32a724f79e36cb15df8da59b474a1e1
+    #                             email:
+    #                                 type: string
+    #                                 example: user@mail.com
+    #                             newPassword:
+    #                                 type: string
+    #                                 example: 123@dkadD
+    #             required: true
 
 components:
     schemas:
@@ -602,7 +770,7 @@ components:
                 - $ref: '#/components/schemas/UserCreation'
                 - type: object
                   properties:
-                      _id:
+                      userId:
                           type: string
                           example: 640410c5465ed9af9ccb8912
                       verified:
@@ -630,7 +798,7 @@ components:
         Borrower:
             type: object
             properties:
-                _id:
+                borrowerId:
                     type: string
                     example: 640410c5465ed9af9ccb8955
                 userId:
@@ -649,7 +817,7 @@ components:
         Lender:
             type: object
             properties:
-                _id:
+                ledderId:
                     type: string
                     example: 640410c5465ed9af9ccb8955
                 userId:
@@ -659,7 +827,7 @@ components:
         Loan:
             type: object
             properties:
-                _id:
+                loanId:
                     type: string
                     example: 640410c5465ed9af9ccb8955
                 userId:
