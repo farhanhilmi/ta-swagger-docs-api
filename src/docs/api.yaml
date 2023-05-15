@@ -45,7 +45,7 @@ paths:
                                               type: string
                                               example: Internal server error
 
-                '409':
+                '404':
                     description: User not found
                     content:
                         application/json:
@@ -56,7 +56,7 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: This e-mail address has already been registered
+                                              example: We can't find your account.
 
                 '401':
                     description: User not verified
