@@ -6,7 +6,7 @@ info:
 servers:
     # Added by API Auto Mocking Plugin
     - description: GCP Production Server
-      url: https://ta-backend-p2p.an.r.appspot.com/api
+      url: https://ta-backend-api.as.r.appspot.com/api
     - description: Local Server
       url: localhost:800/api
 tags:
@@ -660,108 +660,740 @@ paths:
                                     example: 123@dkadD
                 required: true
 
-    # /loans/available:
-    #     get:
-    #         tags:
-    #             - loans
-    #         summary: Get all available loans
-    #         operationId: getAvailableLoans
-    #         responses:
-    #             '500':
-    #                 description: Internal server error
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: Internal server error
-    #             '422':
-    #                 description: Validation Error
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: email,token is required!
-    #             '401':
-    #                 description: Unauthorized because token is invalid
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: token is invalid!
+    /loans/available:
+        get:
+            tags:
+                - loans
+            summary: Get all available loans
+            operationId: getAvailableLoans
+            parameters:
+                - in: query
+                  name: limit
+                  description: limit data per page
+                  schema:
+                      type: integer
+                      example: 10
+                - in: query
+                  name: page
+                  description: page number
+                  schema:
+                      type: integer
+                      example: 1
+                - in: query
+                  name: sort
+                  description: sort data by field
+                  schema:
+                      type: string
+                      example: createdDate
+                - in: query
+                  name: order
+                  description: order data by asc or desc
+                  schema:
+                      type: string
+                      example: desc
+                - in: query
+                  name: q
+                  description: search data
+                  schema:
+                      type: string
+                      example: lahiran
 
-    #             '404':
-    #                 description: Not Found
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: email not found!
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
 
-    #             '200':
-    #                 description: Success change password after user request to reset password
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ApiResponse'
-    #                                 - type: object
-    #                                 - properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: success change password
-    #                                       data:
-    #                                           type: object
-    #                                           properties:
-    #                                               userId:
-    #                                                   type: string
-    #                                                   example: 640410c5465ed9af9ccb8912
-    #                                               email:
-    #                                                   type: string
-    #                                                   example: user@mail.com
-    #                                               name:
-    #                                                   type: string
-    #                                                   example: user
-    #                                               roles:
-    #                                                   type: string
-    #                                                   example: lender
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
 
-    #         requestBody:
-    #             description: Payload to change password
-    #             content:
-    #                 application/json:
-    #                     schema:
-    #                         type: object
-    #                         properties:
-    #                             token:
-    #                                 type: string
-    #                                 example: 71f90b490af811ba0193a2b7c6795809b32a724f79e36cb15df8da59b474a1e1
-    #                             email:
-    #                                 type: string
-    #                                 example: user@mail.com
-    #                             newPassword:
-    #                                 type: string
-    #                                 example: 123@dkadD
-    #             required: true
+                '200':
+                    description: Success get all available loans
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success get all available loans
+                                          data:
+                                              type: array
+                                              items:
+                                                  allOf:
+                                                      - $ref: '#/components/schemas/Loan'
+                                                  type: object
+                                                  properties:
+                                                      totalFunds:
+                                                          type: integer
+                                                          example: 1000000
+                                                      borrower:
+                                                          type: object
+                                                          properties:
+                                                              borrowerId:
+                                                                  type: string
+                                                                  example: 640410c5465ed9af9ccb8912
+                                                              name:
+                                                                  type: string
+                                                                  example: Zinedine Zidane
+                                                              email:
+                                                                  type: string
+                                                                  example: zidane@mail.com
+
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
+
+    /loans/available/:loanId:
+        get:
+            tags:
+                - loans
+            summary: Get all available loans
+            operationId: getDetailAvailableLoans
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Loan not found
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get loan detail
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success get loan detail
+                                          data:
+                                              allOf:
+                                                  - $ref: '#/components/schemas/Loan'
+                                              type: object
+                                              properties:
+                                                  risk:
+                                                      type: string
+                                                      example: 500
+                                                  totalFunds:
+                                                      type: integer
+                                                      example: 1000000
+                                                  contract:
+                                                      type: string
+                                                      example: https://firbase.com/contract/123.pdf
+                                                  borrower:
+                                                      type: object
+                                                      properties:
+                                                          borrowerId:
+                                                              type: string
+                                                              example: 640410c5465ed9af9ccb8912
+                                                          name:
+                                                              type: string
+                                                              example: Zinedine Zidane
+                                                          email:
+                                                              type: string
+                                                              example: zidane@mail.com
+                                                          creditScore:
+                                                              type: string
+                                                              example: 500
+
+                                                          performance:
+                                                              type: object
+                                                              properties:
+                                                                  borrowingRecord:
+                                                                      type: object
+                                                                      properties:
+                                                                          borrowedFunds:
+                                                                              type: integer
+                                                                              example: 1000000
+                                                                          totalBorrowing:
+                                                                              type: integer
+                                                                              example: 2
+                                                                  repayment:
+                                                                      type: object
+                                                                      properties:
+                                                                          earlier:
+                                                                              type: integer
+                                                                              example: 3
+                                                                          onTime:
+                                                                              type: integer
+                                                                              example: 1
+                                                                          late:
+                                                                              type: integer
+                                                                              example: 0
+
+    /loans/recommended/:userId:
+        get:
+            tags:
+                - loans
+            summary: Get all recommended loans
+            operationId: getRecommendedLoans
+            parameters:
+                - in: query
+                  name: limit
+                  description: limit data per page
+                  schema:
+                      type: integer
+                      example: 10
+                - in: query
+                  name: page
+                  description: page number
+                  schema:
+                      type: integer
+                      example: 1
+                - in: query
+                  name: sort
+                  description: sort data by field
+                  schema:
+                      type: string
+                      example: createdDate
+                - in: query
+                  name: order
+                  description: order data by asc or desc
+                  schema:
+                      type: string
+                      example: desc
+                - in: query
+                  name: q
+                  description: search data
+                  schema:
+                      type: string
+                      example: lahiran
+
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+
+                '200':
+                    description: success get all recommended loans
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success get all recommended loans
+                                          data:
+                                              type: array
+                                              items:
+                                                  allOf:
+                                                      - $ref: '#/components/schemas/Loan'
+                                                  type: object
+                                                  properties:
+                                                      totalFunds:
+                                                          type: integer
+                                                          example: 1000000
+                                                      borrower:
+                                                          type: object
+                                                          properties:
+                                                              borrowerId:
+                                                                  type: string
+                                                                  example: 640410c5465ed9af9ccb8912
+                                                              name:
+                                                                  type: string
+                                                                  example: Zinedine Zidane
+                                                              email:
+                                                                  type: string
+                                                                  example: zidane@mail.com
+
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
+
+    /lenders/profile:
+        get:
+            tags:
+                - lenders
+            summary: Get lender profile
+            operationId: getLenderProfile
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Lender not found
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get lender profile
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success get lender profile
+                                          data:
+                                              type: object
+                                              properties:
+                                                  borrowerId:
+                                                      type: string
+                                                      example: 640410c5465ed9af9ccb8912
+                                                  name:
+                                                      type: string
+                                                      example: Zinedine Zidane
+                                                  email:
+                                                      type: string
+                                                      example: zidane@mail.com
+                                                  verfiied:
+                                                      type: boolean
+                                                      example: true
+                                                  phoneNumber:
+                                                      type: integer
+                                                      example: 628533322211
+                                                  profilePicture:
+                                                      type: string
+                                                      example: https://firebase.com/640410c5465ed9af9ccb8912/profilePicture.jpg
+
+    /lenders/profit:
+        get:
+            tags:
+                - lenders
+            summary: Get lender profit
+            operationId: getLenderProfit
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Lender not found
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get lender profit
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get lender profit
+                                          data:
+                                              type: object
+                                              properties:
+                                                  borrowerId:
+                                                      type: string
+                                                      example: 640410c5465ed9af9ccb8912
+                                                  totalYield:
+                                                      type: integer
+                                                      example: 0
+                                                  totalFunding:
+                                                      type: integer
+                                                      example: 5000000
+    /lenders/funding:
+        post:
+            tags:
+                - lenders
+            summary: Lender funding loan request
+            operationId: postFunding
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '409':
+                    description: Already funded
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You already funded this loan request
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find the loan request you are looking for or the loan request is already funded by other lender
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+                '402':
+                    description: Insufficient balance
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You don't have enough balance to fund this loan request. Please top up your balance before funding this loan request.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Amount is required
+
+                '201':
+                    description: Success funding loan request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success funding loan request
+                                          data:
+                                              type: array
+                                              example: []
+            requestBody:
+                description: Payload request to funding loan request
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                loanId:
+                                    type: string
+                                    example: 640410c5465ed9af9ccb8912
+                                amount:
+                                    type: integer
+                                    example: 5000000
+                                lenderSignature:
+                                    type: string
+                                    format: binary
+                                    example: ''
+                        encoding: # The same level as schema
+                            lenderSignature: # Property name (see above)
+                                contentType: image/png, image/jpeg
+                required: true
+
+    /balance/:userId:
+        get:
+            tags:
+                - balance
+            summary: Get balance by user id
+            operationId: getBalance
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+
+                '200':
+                    description: success get all recommended loans
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success get all recommended loans
+                                          data:
+                                              allOf:
+                                                  - $ref: '#/components/schemas/Balance'
+                                              type: object
+                                              #   properties:
+
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
 
 components:
     schemas:
@@ -817,12 +1449,25 @@ components:
         Lender:
             type: object
             properties:
-                ledderId:
+                lenderId:
                     type: string
                     example: 640410c5465ed9af9ccb8955
                 userId:
                     type: string
                     example: 640410c5465ed9af9ccb8912
+
+        Balance:
+            type: object
+            properties:
+                balanceId:
+                    type: string
+                    example: 640410c5465ed9af9ccb8955
+                userId:
+                    type: string
+                    example: 640410c5465ed9af9ccb8912
+                balance:
+                    type: string
+                    example: 10000000
 
         Loan:
             type: object
@@ -879,7 +1524,7 @@ components:
                     # example: []
                 meta:
                     type: object
-                    example: {}
+                    # example: {}
         ResponseError:
             type: object
             properties:
@@ -895,3 +1540,31 @@ components:
                 meta:
                     type: object
                     example: {}
+        PaginationResponse:
+            type: object
+            properties:
+                totalPages:
+                    type: integer
+                    example: 5
+                currentPage:
+                    type: integer
+                    example: 2
+                nextPage:
+                    type: string
+                    example: 'localhost:8000/api/v1/loans?page=3&limit=10'
+                previousPage:
+                    type: string
+                    example: 'localhost:8000/api/v1/loans?page=1&limit=10'
+                limit:
+                    type: integer
+                    example: 10
+
+    securitySchemes:
+        lender_auth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+        borrower_auth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
