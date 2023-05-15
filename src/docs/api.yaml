@@ -58,6 +58,19 @@ paths:
                                               type: string
                                               example: This e-mail address has already been registered
 
+                '401':
+                    description: User not verified
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account is not verified. Please check your email to verify your account.
+
                 '422':
                     description: Validation Error
                     content:
@@ -134,7 +147,7 @@ paths:
                                               type: string
                                               example: Your account is not registered. Please register your account first.
                 '401':
-                    description: User not verified
+                    description: OTP Not match
                     content:
                         application/json:
                             schema:
@@ -1511,7 +1524,7 @@ components:
                     example: user@mail.com
                 password:
                     type: string
-                    example: password@123
+                    example: Test@123
         ApiResponse:
             type: object
             properties:
