@@ -1408,6 +1408,408 @@ paths:
                                                       type: integer
                                                       example: 100
 
+    /borrowers/verification:
+        post:
+            tags:
+                - borrowers
+            summary: Verification data borrower
+            operationId: VerifyBorrower
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Forbidden access
+                '422':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: pekerjaan is required
+                # '400':
+                #     description: Bad request
+                #     content:
+                #         application/json:
+                #             schema:
+                #                 allOf:
+                #                     - $ref: '#/components/schemas/ResponseError'
+                #                     - type: object
+                #                       properties:
+                #                           message:
+                #                               type: string
+                #                               example: OTP Code is expired
+                '200':
+                    description: Success verified borrower
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success verified borrower
+                                          data:
+                                              example: []
+
+            requestBody:
+                description: Payload
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                personal:
+                                    type: object
+                                    properties:
+                                        fullName:
+                                            type: string
+                                            example: Eden Hazard
+                                        gender:
+                                            type: string
+                                            enum:
+                                                - Male
+                                                - Female
+                                        brithDate:
+                                            type: string
+                                            example: 1990-01-01
+                                        work:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                    example: PNS
+                                                salary:
+                                                    type: integer
+                                                    example: 5000000
+                                relativesContact:
+                                    type: object
+                                    properties:
+                                        firstRelative:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                    example: John Doe
+                                                relation:
+                                                    type: string
+                                                    example: Ibu
+                                                phoneNumber:
+                                                    type: string
+                                                    example: 628123456789
+                                        secondRelative:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                    example: Toni
+                                                relation:
+                                                    type: string
+                                                    example: Anak
+                                                phoneNumber:
+                                                    type: string
+                                                    example: 628123456789
+                                idCardImage:
+                                    type: string
+                                    example: ''
+                                faceImage:
+                                    type: string
+                                    example: ''
+                required: true
+
+    /borrowers/billing:
+        get:
+            tags:
+                - borrowers
+            summary: Get billing by user id
+            operationId: VerifyBorrower
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Forbidden access
+
+                # '400':
+                #     description: Bad request
+                #     content:
+                #         application/json:
+                #             schema:
+                #                 allOf:
+                #                     - $ref: '#/components/schemas/ResponseError'
+                #                     - type: object
+                #                       properties:
+                #                           message:
+                #                               type: string
+                #                               example: OTP Code is expired
+                '200':
+                    description: Success get billing
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get billing
+                                          data:
+                                              type: object
+                                              properties:
+                                                  currentBill:
+                                                      type: integer
+                                                      example: 1000000
+                                                  paymentSchedule:
+                                                      type: array
+                                                      items:
+                                                          type: object
+                                                          properties:
+                                                              date:
+                                                                  type: string
+                                                                  example: 2021-01-01
+                                                              amount:
+                                                                  type: integer
+                                                                  example: 1000000
+
+    /borrowers/history:
+        get:
+            tags:
+                - borrowers
+            summary: Get history by user id
+            operationId: borrowerHistory
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Forbidden access
+                # '400':
+                #     description: Bad request
+                #     content:
+                #         application/json:
+                #             schema:
+                #                 allOf:
+                #                     - $ref: '#/components/schemas/ResponseError'
+                #                     - type: object
+                #                       properties:
+                #                           message:
+                #                               type: string
+                #                               example: OTP Code is expired
+                '200':
+                    description: Success get loan history
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get loan history
+                                          data:
+                                              type: object
+                                              properties:
+                                                  active:
+                                                      type: object
+                                                      properties:
+                                                          loanId:
+                                                              type: string
+                                                              example: 640410c5465ed9af9ccb8912
+                                                          date:
+                                                              type: string
+                                                              example: 2021-01-01
+                                                          totalFund:
+                                                              type: integer
+                                                              example: 1000000
+                                                          totalLoanAmount:
+                                                              type: integer
+                                                              example: 1000000
+                                                          yield:
+                                                              type: integer
+                                                              example: 50000
+                                                          tenor:
+                                                              type: integer
+                                                              example: 5
+                                                          paymentSchema:
+                                                              type: string
+                                                              example: Pelunasan Cicilan
+                                                          borrowingCategory:
+                                                              type: string
+                                                              example: Pendidikan
+                                                          loanPurpose:
+                                                              type: string
+                                                              example: Bayar kuliah
+                                                          contract:
+                                                              type: string
+                                                              example: https://www.google.com.pdf
+                                                  history:
+                                                      type: array
+                                                      items:
+                                                          type: object
+                                                          properties:
+                                                              loanId:
+                                                                  type: string
+                                                                  example: 640410c5465ed9af9ccb8912
+                                                              date:
+                                                                  type: string
+                                                                  example: 2021-01-01
+                                                              totalLoanAmount:
+                                                                  type: integer
+                                                                  example: 1000000
+                                                              yield:
+                                                                  type: integer
+                                                                  example: 1000000
+                                                              tenor:
+                                                                  type: integer
+                                                                  example: 4
+                                                              borrowingCategory:
+                                                                  type: string
+                                                                  example: Pendidikan
+
 components:
     schemas:
         User:
