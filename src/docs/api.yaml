@@ -1507,7 +1507,7 @@ paths:
             requestBody:
                 description: Payload
                 content:
-                    application/json:
+                    multipart/form-data:
                         schema:
                             type: object
                             properties:
@@ -1567,6 +1567,11 @@ paths:
                                 faceImage:
                                     type: string
                                     example: ''
+                        encoding: # The same level as schema
+                            idCardImage:
+                                contentType: image/png, image/jpeg
+                            faceImage:
+                                contentType: image/png, image/jpeg
                 required: true
 
     /borrowers/billing:
@@ -1669,11 +1674,11 @@ paths:
                                                                   type: integer
                                                                   example: 1000000
 
-    /borrowers/history:
+    /borrowers/loan:
         get:
             tags:
                 - borrowers
-            summary: Get history by user id
+            summary: Get loan history by user id
             operationId: borrowerHistory
             responses:
                 '500':
@@ -1809,6 +1814,125 @@ paths:
                                                               borrowingCategory:
                                                                   type: string
                                                                   example: Pendidikan
+
+        post:
+            tags:
+                - borrowers
+            summary: post request loan
+            operationId: requestLoan
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Forbidden access
+                '422':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: tenor is required
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Minimum loan yield is 50000
+
+                '201':
+                    description: Success request loan
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Loan request sent! Please check accordingly in your dashboard and your email for further information!
+                                          data:
+                                              example: []
+
+            requestBody:
+                description: Payload
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                amount:
+                                    type: integer
+                                    example: 500000
+                                tenor:
+                                    type: integer
+                                    example: 5
+                                borrowringCategory:
+                                    type: string
+                                    enum:
+                                        - Pendidikan
+                                        - Kesehatan
+                                        - Rumah Tangga
+                                        - Pekerjaan
+                                        - Hiburan
+                                        - Lainnya
+                                purpose:
+                                    type: string
+                                    example: Bayar kuliah
+                                yield:
+                                    type: integer
+                                    example: 50000
+                                paymentSchema:
+                                    type: string
+                                    enum:
+                                        - Pelunasan Cicilan
+                                        - Pelunasan Pokok
+                required: true
 
 components:
     schemas:
