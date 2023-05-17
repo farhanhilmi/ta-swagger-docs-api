@@ -1334,6 +1334,175 @@ paths:
                                 contentType: image/png, image/jpeg
                 required: true
 
+        get:
+            tags:
+                - lenders
+            summary: Get lender portfolio list (loan request that already funded and active)
+            operationId: getPortfolio
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get lender portfolio list
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: success fetching lender portfolio list
+                                          data:
+                                              type: object
+                                              properties:
+                                                  active:
+                                                      type: object
+                                                      properties:
+                                                          summary:
+                                                              type: object
+                                                              properties:
+                                                                  totalFunding:
+                                                                      type: integer
+                                                                      example: 5000000
+                                                                  totalYield:
+                                                                      type: integer
+                                                                      example: 200000
+                                                          funding:
+                                                              type: array
+                                                              items:
+                                                                  type: object
+                                                                  properties:
+                                                                      funds:
+                                                                          type: object
+                                                                          properties:
+                                                                              amount:
+                                                                                  type: integer
+                                                                                  example: 500000
+                                                                              yield:
+                                                                                  type: integer
+                                                                                  example: 50000
+                                                                              repaymentDate:
+                                                                                  type: string
+                                                                                  example: 2021-10-10T00:00:00.000Z
+                                                                      Loan:
+                                                                          type: object
+                                                                          properties:
+                                                                              borrower:
+                                                                                  type: object
+                                                                                  properties:
+                                                                                      name:
+                                                                                          type: string
+                                                                                          example: John Doe
+                                                                                      creditScore:
+                                                                                          type: integer
+                                                                                          example: 500
+                                                                              loan:
+                                                                                  type: object
+                                                                                  properties:
+                                                                                      loanId:
+                                                                                          type: string
+                                                                                          example: 640410c5465ed9af9ccb8912
+                                                                                      amount:
+                                                                                          type: integer
+                                                                                          example: 5000000
+                                                                                      tenor:
+                                                                                          type: integer
+                                                                                          example: 5
+                                                  done:
+                                                      type: object
+                                                      properties:
+                                                          summary:
+                                                              type: object
+                                                              properties:
+                                                                  totalFunding:
+                                                                      type: integer
+                                                                      example: 5000000
+                                                                  totalYield:
+                                                                      type: integer
+                                                                      example: 200000
+                                                          funding:
+                                                              type: array
+                                                              items:
+                                                                  type: object
+                                                                  properties:
+                                                                      funds:
+                                                                          type: object
+                                                                          properties:
+                                                                              amount:
+                                                                                  type: integer
+                                                                                  example: 500000
+                                                                              yield:
+                                                                                  type: integer
+                                                                                  example: 50000
+                                                                              repaymentDate:
+                                                                                  type: string
+                                                                                  example: 2021-10-10T00:00:00.000Z
+                                                                      Loan:
+                                                                          type: object
+                                                                          properties:
+                                                                              borrower:
+                                                                                  type: object
+                                                                                  properties:
+                                                                                      name:
+                                                                                          type: string
+                                                                                          example: John Doe
+                                                                                      creditScore:
+                                                                                          type: integer
+                                                                                          example: 500
+                                                                              loan:
+                                                                                  type: object
+                                                                                  properties:
+                                                                                      loanId:
+                                                                                          type: string
+                                                                                          example: 640410c5465ed9af9ccb8912
+                                                                                      amount:
+                                                                                          type: integer
+                                                                                          example: 5000000
+                                                                                      tenor:
+                                                                                          type: integer
+                                                                                          example: 5
+
     /balance/:userId:
         get:
             tags:
