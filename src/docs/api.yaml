@@ -8,7 +8,7 @@ servers:
     - description: GCP Production Server
       url: https://ta-backend-api.as.r.appspot.com/api
     - description: Local Server
-      url: localhost:800/api
+      url: localhost:8000/api
 tags:
     - name: authentications
       description: Operations about user authentications
@@ -297,12 +297,27 @@ paths:
 
                 required: true
 
-    /authentication/register/otp/email/verify:
+    /authentication/verification/email/{userId}/{token}}:
         post:
             tags:
                 - authentications
-            summary: Verify OTP after register new account
-            operationId: register
+            summary: Verify email after user klik link in email
+            operationId: verifyEmail
+            parameters:
+                - name: userId
+                  in: path
+                  description: userId from email
+                  required: true
+                  schema:
+                      type: string
+                      example: diade8328232m99me
+                - name: token
+                  in: path
+                  description: token from email
+                  required: true
+                  schema:
+                      type: string
+                      example: 1234567890
             responses:
                 '500':
                     description: Internal server error
@@ -316,8 +331,8 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
-                '422':
-                    description: Validation Error
+                '400':
+                    description: Parameters missing
                     content:
                         application/json:
                             schema:
@@ -327,22 +342,9 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: otp is required!
-                '401':
-                    description: Bad request
-                    content:
-                        application/json:
-                            schema:
-                                allOf:
-                                    - $ref: '#/components/schemas/ResponseError'
-                                    - type: object
-                                      properties:
-                                          message:
-                                              type: string
-                                              example: OTP code doesn't match. Please check again!
-
+                                              example: userId is required
                 '409':
-                    description: Already verified email
+                    description: Your account has been verified. Please login to continue using our services.
                     content:
                         application/json:
                             schema:
@@ -352,23 +354,9 @@ paths:
                                       properties:
                                           message:
                                               type: string
-                                              example: Your account already verified!
-
-                '404':
-                    description: Not Found
-                    content:
-                        application/json:
-                            schema:
-                                allOf:
-                                    - $ref: '#/components/schemas/ResponseError'
-                                    - type: object
-                                      properties:
-                                          message:
-                                              type: string
-                                              example: Account with this userId not found!
-
+                                              example: Your account has been verified.
                 '200':
-                    description: Success verified email
+                    description: Success verify email
                     content:
                         application/json:
                             schema:
@@ -378,29 +366,77 @@ paths:
                                     - properties:
                                           message:
                                               type: string
-                                              example: success verified user email!
+                                              example: Your account has been successfully verified.
                                           data:
-                                              type: object
-                                              properties:
-                                                  verified:
-                                                      type: boolean
-                                                      example: true
+                                              type: array
+                                              example: []
 
-            requestBody:
-                description: Payload to verify account with OTP
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                userId:
-                                    type: string
-                                    example: w8817381223n8ude
-                                otp:
-                                    description: user input OTP
-                                    type: string
-                                    example: 31349
-                required: true
+    /authentication/verification/email/{userId}/resend:
+        post:
+            tags:
+                - authentications
+            summary: Resend verification email
+            operationId: resendEmail
+            parameters:
+                - name: userId
+                  in: path
+                  description: userId from email
+                  required: true
+                  schema:
+                      type: string
+                      example: diade8328232m99me
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '400':
+                    description: Parameters missing
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: userId is required
+                '409':
+                    description: Your account has been verified. Please login to continue using our services.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account has been verified.
+                '200':
+                    description: Success send verfication email again
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Verification email has been sent. Please check your email to verify your account.
+                                          data:
+                                              type: array
+                                              example: []
 
     /authentication/token/refresh:
         post:
