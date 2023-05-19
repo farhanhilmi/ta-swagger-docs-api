@@ -104,6 +104,9 @@ paths:
                                                   otpExpired:
                                                       type: string
                                                       example: 2023-03-05T11:47:31+0700
+                                                  resendOtpUrl:
+                                                      type: string
+                                                      example: /authentication/login/otp/resend/aijdia748374@384$f
 
             requestBody:
                 description: User login with credentials
@@ -218,6 +221,98 @@ paths:
                                     description: user input OTP
                                     type: string
                                     example: 31349
+                required: true
+
+    /authentication/login/otp/resend:
+        post:
+            tags:
+                - authentications
+            summary: Resend OTP to user email
+            operationId: resendLoginOTP
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find your account.
+
+                '401':
+                    description: User not verified
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your account is not verified. Please check your email to verify your account.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: email is required!
+                '200':
+                    description: Success resend OTP to user email
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: OTP has been sent to your email
+                                          data:
+                                              type: object
+                                              properties:
+                                                  userId:
+                                                      type: string
+                                                      example: 64041cb5e5230c4c803c56b1
+                                                  otpExpired:
+                                                      type: string
+                                                      example: 2023-03-05T11:47:31+0700
+
+            requestBody:
+                description: User login with credentials
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: zee@yopmail.com
                 required: true
 
     /authentication/register:
@@ -706,7 +801,7 @@ paths:
                                     example: user@mail.com
                                 newPassword:
                                     type: string
-                                    example: 123@dkadD
+                                    example: Test@123
                 required: true
 
     /loans/available:
@@ -2169,7 +2264,7 @@ components:
                     example: lender
                 password:
                     type: string
-                    example: password@123
+                    example: Test@123
 
         Borrower:
             type: object
