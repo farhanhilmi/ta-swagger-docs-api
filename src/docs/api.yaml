@@ -8,7 +8,7 @@ servers:
     - description: GCP Production Server
       url: https://ta-backend-api.as.r.appspot.com/api
     - description: Local Server
-      url: localhost:800/api
+      url: localhost:8000/api
 tags:
     - name: authentications
       description: Operations about user authentications
