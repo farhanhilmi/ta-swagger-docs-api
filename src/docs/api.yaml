@@ -1709,7 +1709,10 @@ paths:
                                                       example: 100
 
     /borrowers/verification:
-        post:
+        put:
+            externalDocs:
+                description: For more information, see here
+                url: https://lively-rocket-630275.postman.co/workspace/%5BTA%5D---P2P-Lending-Syariah~1bc383f4-a44d-4a02-ba80-a3a2f19cb3df/request/25131439-2b612021-6ceb-43b6-b2e3-3bbddc9d602d?ctx=documentation
             tags:
                 - borrowers
             summary: Verification data borrower
@@ -1806,6 +1809,7 @@ paths:
 
             requestBody:
                 description: Payload
+
                 content:
                     multipart/form-data:
                         schema:
