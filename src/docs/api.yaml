@@ -2,7 +2,20 @@ openapi: 3.0.0
 info:
     version: '1'
     title: P2P Lending Syariah API
-    description: API for TA
+    description: |
+        ## Ready APIs 
+        #### Authentications: `✅ All APIs are ready`
+        #### Borrowers:
+        | Endpoint                                         | Status       |
+        | ------------------------------------------------ | ------------ |
+        | `Verification data borrower`                     | `✅Ready`
+
+        #### Lenders: `❌`
+
+        #### Loans: `❌`
+
+        #### Balance: `❌`
+
 servers:
     # Added by API Auto Mocking Plugin
     - description: GCP Production Server
