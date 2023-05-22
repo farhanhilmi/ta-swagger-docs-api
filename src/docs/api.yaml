@@ -16,6 +16,10 @@ info:
 
         #### Balance: `❌`
 
+        ---
+        ## Available users for testing
+        **<a href='https://frhnmii.notion.site/User-credentials-57e388b1807c4094ae302fc78a386d47'>https://frhnmii.notion.site/User-credentials-57e388b1807c4094ae302fc78a386d47</a>**
+
 servers:
     # Added by API Auto Mocking Plugin
     - description: GCP Production Server
