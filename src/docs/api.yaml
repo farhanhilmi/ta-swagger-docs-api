@@ -117,9 +117,12 @@ paths:
                                                   otpExpired:
                                                       type: string
                                                       example: 2023-03-05T11:47:31+0700
-                                                  resendOtpUrl:
+                                                  #   resendOtpUrl:
+                                                  #       type: string
+                                                  #       example: /authentication/login/otp/resend/aijdia748374@384$f
+                                                  email:
                                                       type: string
-                                                      example: /authentication/login/otp/resend/aijdia748374@384$f
+                                                      example: user@mail.com
 
             requestBody:
                 description: User login with credentials
