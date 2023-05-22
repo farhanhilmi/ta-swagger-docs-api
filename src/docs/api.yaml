@@ -1708,7 +1708,7 @@ paths:
                                                       type: integer
                                                       example: 100
 
-    /borrowers/verification:
+    /borrowers/request/verification:
         put:
             externalDocs:
                 description: For more information, see here
