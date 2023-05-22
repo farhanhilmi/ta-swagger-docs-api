@@ -8,7 +8,7 @@ info:
         #### Borrowers:
         | Endpoint                                         | Status       |
         | ------------------------------------------------ | ------------ |
-        | `Verification data borrower`                     | `✅Ready`
+        | [`Verification data borrower`](#/borrowers/VerifyBorrower)                     | `✅Ready`
 
         #### Lenders: `❌`
 
