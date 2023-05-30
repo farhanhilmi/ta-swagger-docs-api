@@ -1053,6 +1053,8 @@ paths:
                 - loans
             summary: Get all recommended loans
             operationId: getRecommendedLoans
+            security:
+                - lender_auth: []
             parameters:
                 - in: query
                   name: limit
@@ -1654,12 +1656,14 @@ paths:
                                                                                           type: integer
                                                                                           example: 5
 
-    /balance/:userId:
+    /balance:
         get:
             tags:
                 - balance
-            summary: Get balance by user id
+            summary: Get balance of current user
             operationId: getBalance
+            security:
+                - lender_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -1728,6 +1732,543 @@ paths:
                                                       type: integer
                                                       example: 100
 
+    /balance/deposit:
+        get:
+            tags:
+                - balance
+            summary: Get deposit virtual account number
+            operationId: getDepositVA
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
+
+                '200':
+                    description: 'Available bank name: Bank Central Asia, CIMB Niaga, Mandiri, BNI, Permata, BRI, BSI'
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get deposit virtual account number
+                                          data:
+                                              type: array
+                                              items:
+                                                  type: object
+                                                  properties:
+                                                      bankFullName:
+                                                          type: string
+                                                          example: Bank Central Asia
+                                                      bankCode:
+                                                          type: string
+                                                          example: BCA
+                                                      virtualAccountNumber:
+                                                          type: string
+                                                          example: 1234567890
+
+    /balance/withdraw:
+        post:
+            tags:
+                - balance
+            summary: Withdraw balance
+            operationId: withdrawBalance
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find this account number. Please check again.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '402':
+                    description: Insufficient balance
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Your balance is not enough to withdraw.
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: AccountNumber field(s) is required
+
+                '200':
+                    description: Success withdraw balance
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success withdraw balance
+                                          data:
+                                              type: array
+                                              example: []
+            requestBody:
+                description: Payload request to withdraw balance
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                accountNumber:
+                                    type: number
+                                    example: 123456789
+                                bankCode:
+                                    type: string
+                                    example: BCA
+                                amount:
+                                    type: number
+                                    example: 100000
+                required: true
+
+    /balance/account:
+        get:
+            tags:
+                - balance
+            summary: 'Get bank account of current user. All Parameters are optional'
+            operationId: getBankAccount
+            parameters:
+                - in: query
+                  name: limit
+                  description: limit data per page
+                  schema:
+                      type: integer
+                      example: 10
+                - in: query
+                  name: page
+                  description: page number
+                  schema:
+                      type: integer
+                      example: 1
+                - in: query
+                  name: sort
+                  description: sort data by field
+                  schema:
+                      type: string
+                      example: createdDate
+                - in: query
+                  name: order
+                  description: order data by asc or desc
+                  schema:
+                      type: string
+                      example: desc
+
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get bank account
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get bank account
+                                          data:
+                                              type: array
+                                              items:
+                                                  type: object
+                                                  properties:
+                                                      bankId:
+                                                          type: string
+                                                          example: 5f9b2b3b5f9b2b3b5f9b2b3b
+                                                      bankName:
+                                                          type: string
+                                                          example: Bank Central Asia
+                                                      bankCode:
+                                                          type: string
+                                                          example: BCA
+                                                      accountNumber:
+                                                          type: string
+                                                          example: 1234567890
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
+
+        post:
+            tags:
+                - balance
+            summary: Add new bank account
+            operationId: addBankAccount
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '409':
+                    description: Already exist
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Bank account already exist
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find this account number. Please check again.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: AccountNumber field(s) is required
+
+                '201':
+                    description: Success add new bank account
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success add new bank account
+                                          data:
+                                              type: array
+                                              example: []
+            requestBody:
+                description: Payload request to add new bank account
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                accountNumber:
+                                    type: number
+                                    example: 123456789
+                                bankCode:
+                                    type: string
+                                    example: BCA
+                required: true
+
+        put:
+            tags:
+                - balance
+            summary: Update bank account
+            operationId: updateBankAccount
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '409':
+                    description: Already exist
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Bank account already exist
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find this account number. Please check again.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: AccountNumber field(s) is required
+
+                '200':
+                    description: Success update bank account
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success update bank account
+                                          data:
+                                              type: array
+                                              example: []
+            requestBody:
+                description: Payload request to update bank account
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                accountNumber:
+                                    type: number
+                                    example: 123456789
+                                bankCode:
+                                    type: string
+                                    example: BCA
+                required: true
+
     /borrowers/request/verification:
         put:
             externalDocs:
@@ -1737,6 +2278,8 @@ paths:
                 - borrowers
             summary: Verification data borrower
             operationId: VerifyBorrower
+            security:
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -1904,6 +2447,8 @@ paths:
                 - borrowers
             summary: Get billing by user id
             operationId: VerifyBorrower
+            security:
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -2003,6 +2548,8 @@ paths:
             tags:
                 - borrowers
             summary: Get loan history by user id
+            security:
+                - borrower_auth: []
             operationId: borrowerHistory
             responses:
                 '500':
@@ -2144,6 +2691,8 @@ paths:
                 - borrowers
             summary: post request loan
             operationId: requestLoan
+            security:
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
