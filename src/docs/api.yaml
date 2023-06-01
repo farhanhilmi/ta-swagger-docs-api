@@ -412,7 +412,7 @@ paths:
 
                 required: true
 
-    /authentication/verification/email/{userId}/{token}}:
+    /authentication/verification/email/{userId}/{token}:
         post:
             tags:
                 - authentications
@@ -1572,7 +1572,7 @@ paths:
                                                                               amount:
                                                                                   type: integer
                                                                                   example: 500000
-                                                                              yield:
+                                                                              yieldReturn:
                                                                                   type: integer
                                                                                   example: 50000
                                                                               repaymentDate:
@@ -1625,7 +1625,7 @@ paths:
                                                                               amount:
                                                                                   type: integer
                                                                                   example: 500000
-                                                                              yield:
+                                                                              yieldReturn:
                                                                                   type: integer
                                                                                   example: 50000
                                                                               repaymentDate:
@@ -1960,6 +1960,7 @@ paths:
 
             security:
                 - lender_auth: []
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -2046,6 +2047,7 @@ paths:
             operationId: addBankAccount
             security:
                 - lender_auth: []
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -2137,8 +2139,21 @@ paths:
                                               type: string
                                               example: Success add new bank account
                                           data:
-                                              type: array
-                                              example: []
+                                              type: object
+                                              properties:
+                                                  bankFullName:
+                                                      type: string
+                                                      example: Bank Central Asia
+                                                  bankCode:
+                                                      type: string
+                                                      example: BCA
+                                                  accountNumber:
+                                                      type: string
+                                                      example: 1234567890
+                                                  onBehalf:
+                                                      type: string
+                                                      example: John Doe
+
             requestBody:
                 description: Payload request to add new bank account
                 content:
@@ -2161,6 +2176,7 @@ paths:
             operationId: updateBankAccount
             security:
                 - lender_auth: []
+                - borrower_auth: []
             responses:
                 '500':
                     description: Internal server error
@@ -2644,7 +2660,7 @@ paths:
                                                           totalLoanAmount:
                                                               type: integer
                                                               example: 1000000
-                                                          yield:
+                                                          yieldReturn:
                                                               type: integer
                                                               example: 50000
                                                           tenor:
@@ -2676,7 +2692,7 @@ paths:
                                                               totalLoanAmount:
                                                                   type: integer
                                                                   example: 1000000
-                                                              yield:
+                                                              yieldReturn:
                                                                   type: integer
                                                                   example: 1000000
                                                               tenor:
@@ -2797,7 +2813,7 @@ paths:
                                 purpose:
                                     type: string
                                     example: Bayar kuliah
-                                yield:
+                                yieldReturn:
                                     type: integer
                                     example: 50000
                                 paymentSchema:
