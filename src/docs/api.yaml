@@ -13,7 +13,11 @@ info:
 
         #### Lenders: `❌`
 
-        #### Loans: `❌`
+        #### Loans:
+        | Endpoint                                         | Status       |
+        | ------------------------------------------------ | ------------ |
+        | `Get all available loans`                             | `✅Ready`
+        | `Get loan detail by loanId`                             | `✅Ready`
 
         #### Balance: `❌`
 
@@ -963,7 +967,7 @@ paths:
         get:
             tags:
                 - loans
-            summary: Get all available loans
+            summary: Get loan detail by loanId
             operationId: getDetailAvailableLoans
             responses:
                 '500':
