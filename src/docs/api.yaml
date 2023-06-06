@@ -9,6 +9,7 @@ info:
         | Endpoint                                         | Status       |
         | ------------------------------------------------ | ------------ |
         | [`Verification data borrower`](#/borrowers/VerifyBorrower)                     | `✅Ready`
+        | `Post Loan Request`                             | `✅Ready`
 
         #### Lenders: `❌`
 
@@ -861,6 +862,30 @@ paths:
                   schema:
                       type: string
                       example: lahiran
+                - in: query
+                  name: tenor_min
+                  description: filter data by tenor minimum value.
+                  schema:
+                      type: string
+                      example: 2
+                - in: query
+                  name: tenor_max
+                  description: filter data by tenor maximum value.
+                  schema:
+                      type: string
+                      example: 7
+                - in: query
+                  name: yield_min
+                  description: filter data by yield minimum value.
+                  schema:
+                      type: string
+                      example: 100000
+                - in: query
+                  name: yield_max
+                  description: filter data by yield maximum value.
+                  schema:
+                      type: string
+                      example: 100000
 
             responses:
                 '500':
@@ -908,7 +933,7 @@ paths:
                                                       - $ref: '#/components/schemas/Loan'
                                                   type: object
                                                   properties:
-                                                      totalFunds:
+                                                      totalFunding:
                                                           type: integer
                                                           example: 1000000
                                                       borrower:
@@ -1000,7 +1025,7 @@ paths:
                                                   risk:
                                                       type: string
                                                       example: 500
-                                                  totalFunds:
+                                                  totalFunding:
                                                       type: integer
                                                       example: 1000000
                                                   contract:
@@ -1146,7 +1171,7 @@ paths:
                                                       - $ref: '#/components/schemas/Loan'
                                                   type: object
                                                   properties:
-                                                      totalFunds:
+                                                      totalFunding:
                                                           type: integer
                                                           example: 1000000
                                                       borrower:
@@ -1705,7 +1730,7 @@ paths:
                                               example: User not found
 
                 '200':
-                    description: success get all recommended loans
+                    description: success get balance of current user
                     content:
                         application/json:
                             schema:
@@ -1715,22 +1740,14 @@ paths:
                                     - properties:
                                           message:
                                               type: string
-                                              example: success get all recommended loans
+                                              example: success get balance
                                           data:
                                               allOf:
                                                   - $ref: '#/components/schemas/Balance'
                                               type: object
                                               #   properties:
 
-                                          meta:
-                                              type: object
-                                              properties:
-                                                  pagination:
-                                                      allOf:
-                                                          - $ref: '#/components/schemas/PaginationResponse'
-                                                  totalItems:
-                                                      type: integer
-                                                      example: 100
+                                          meta: {}
 
     /balance/deposit:
         get:
@@ -2906,7 +2923,7 @@ components:
                 userId:
                     type: string
                     example: 640410c5465ed9af9ccb8912
-                loanPurpose:
+                purpose:
                     type: string
                     example: Biaya Nikahan Untuk Anak
                 borrowingCategory:
@@ -2923,7 +2940,7 @@ components:
                 tenor:
                     type: integer
                     example: 3
-                interestRate:
+                yieldReturn:
                     type: integer
                     format: int64
                     example: 500000
