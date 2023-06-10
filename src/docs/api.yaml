@@ -5,20 +5,26 @@ info:
     description: |
         ## Ready APIs 
         #### Authentications: `✅ All APIs are ready`
-        #### Borrowers:
-        | Endpoint                                         | Status       |
+
+        <br/>
+        | BORROWERS                                         | Status       |
         | ------------------------------------------------ | ------------ |
-        | [`Verification data borrower`](#/borrowers/VerifyBorrower)                     | `✅Ready`
-        | `Post Loan Request`                             | `✅Ready`
+        | `Verification data borrower`                     | `✅Ready`
+        | `Post request loan`                             | `✅Ready`
+        | `Get current borrower loan history`             | `✅Ready`
 
-        #### Lenders: `❌`
+        <br/>
+        | LENDERS                                         | Status       |
+        | ------------------------------------------------ | ------------ |
+        | `Get lender profile data`                     | `✅Ready`
 
-        #### Loans:
-        | Endpoint                                         | Status       |
+        <br/>
+        | LOANS                                         | Status       |
         | ------------------------------------------------ | ------------ |
         | `Get all available loans`                             | `✅Ready`
         | `Get loan detail by loanId`                             | `✅Ready`
 
+        <br/>
         #### Balance: `❌`
 
         ---
@@ -1205,7 +1211,7 @@ paths:
         get:
             tags:
                 - lenders
-            summary: Get lender profile
+            summary: Get lender profile data
             operationId: getLenderProfile
             security:
                 - lender_auth: []
@@ -2584,7 +2590,7 @@ paths:
         get:
             tags:
                 - borrowers
-            summary: Get loan history by user id
+            summary: Get current borrower loan history
             security:
                 - borrower_auth: []
             operationId: borrowerHistory
@@ -2675,10 +2681,10 @@ paths:
                                                           date:
                                                               type: string
                                                               example: 2021-01-01
-                                                          totalFund:
+                                                          totalFunding:
                                                               type: integer
                                                               example: 1000000
-                                                          totalLoanAmount:
+                                                          amount:
                                                               type: integer
                                                               example: 1000000
                                                           yieldReturn:
@@ -2710,7 +2716,7 @@ paths:
                                                               date:
                                                                   type: string
                                                                   example: 2021-01-01
-                                                              totalLoanAmount:
+                                                              amount:
                                                                   type: integer
                                                                   example: 1000000
                                                               yieldReturn:
@@ -2726,7 +2732,7 @@ paths:
         post:
             tags:
                 - borrowers
-            summary: post request loan
+            summary: Post request loan
             operationId: requestLoan
             security:
                 - borrower_auth: []
