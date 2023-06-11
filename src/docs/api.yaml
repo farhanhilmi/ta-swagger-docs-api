@@ -7,20 +7,21 @@ info:
         #### Authentications: `✅ All APIs are ready`
 
         <br/>
-        | BORROWERS                                         | Status       |
+        | BORROWERS                                         | Status      |
         | ------------------------------------------------ | ------------ |
         | `Verification data borrower`                     | `✅Ready`
         | `Post request loan`                             | `✅Ready`
         | `Get current borrower loan history`             | `✅Ready`
 
         <br/>
-        | LENDERS                                         | Status       |
-        | ------------------------------------------------ | ------------ |
-        | `Get lender profile data`                     | `✅Ready`
+        | LENDERS                                           | Status       |
+        | ------------------------------------------------- | ------------ |
+        | `Get lender profile data`                         | `✅Ready`
+        | `Lender funding loan request`                     | `✅Ready`
 
         <br/>
         | LOANS                                         | Status       |
-        | ------------------------------------------------ | ------------ |
+        | ------------------------------------------------ | ----------|
         | `Get all available loans`                             | `✅Ready`
         | `Get loan detail by loanId`                             | `✅Ready`
 
@@ -1503,7 +1504,7 @@ paths:
             requestBody:
                 description: Payload request to funding loan request
                 content:
-                    multipart/form-data:
+                    application/json:
                         schema:
                             type: object
                             properties:
@@ -1513,13 +1514,13 @@ paths:
                                 amount:
                                     type: integer
                                     example: 5000000
-                                lenderSignature:
-                                    type: string
-                                    format: binary
-                                    example: ''
-                        encoding: # The same level as schema
-                            lenderSignature: # Property name (see above)
-                                contentType: image/png, image/jpeg
+                        #         lenderSignature:
+                        #             type: string
+                        #             format: binary
+                        #             example: ''
+                        # encoding: # The same level as schema
+                        #     lenderSignature: # Property name (see above)
+                        #         contentType: image/png, image/jpeg
                 required: true
 
         get:
