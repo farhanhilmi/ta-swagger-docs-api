@@ -37,7 +37,7 @@ info:
 servers:
     # Added by API Auto Mocking Plugin
     - description: GCP Production Server
-      url: https://ta-backend-api.as.r.appspot.com/api
+      url: https://amanah-syariah.as.r.appspot.com/api
     - description: Local Server
       url: http://localhost:8000/api
 tags:
