@@ -20,6 +20,7 @@ info:
         | `Get lender profile data`                         | `✅Ready`
         | `Lender funding loan request`                     | `✅Ready`
         | `Get lender profit imbal hasil dan pendanaan`     | `✅Ready`
+        | `Verification KYC data lender`                    | `✅Ready`
 
         <br/>
         | LOANS                                         | Status       |
@@ -1210,177 +1211,153 @@ paths:
                                                       type: integer
                                                       example: 100
 
-    # /lenders/request/verification:
-    #     put:
-    #         externalDocs:
-    #             description: For more information, see here
-    #             url: https://lively-rocket-630275.postman.co/workspace/%5BTA%5D---P2P-Lending-Syariah~1bc383f4-a44d-4a02-ba80-a3a2f19cb3df/request/25131439-2b612021-6ceb-43b6-b2e3-3bbddc9d602d?ctx=documentation
-    #         tags:
-    #             - lenders
-    #         summary: Verification data lender
-    #         operationId: VerifyLender
-    #         security:
-    #             - borrower_auth: []
-    #         responses:
-    #             '500':
-    #                 description: Internal server error
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: Internal server error
+    /lenders/request/verification:
+        put:
+            externalDocs:
+                description: For more information, see here
+                url: https://lively-rocket-630275.postman.co/workspace/%5BTA%5D---P2P-Lending-Syariah~1bc383f4-a44d-4a02-ba80-a3a2f19cb3df/request/25131439-0f2ce653-57aa-4a1c-93e0-b63b152fec75?ctx=documentation
+            tags:
+                - lenders
+            summary: Verification KYC data lender
+            operationId: VerifyLender
+            security:
+                - lender_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
 
-    #             '404':
-    #                 description: User not found
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: User not found
-    #             '401':
-    #                 description: Unauthorized
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: Unauthorized access. Please login first.
+                '404':
+                    description: User not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: User not found
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Unauthorized access. Please login first.
 
-    #             '403':
-    #                 description: Forbidden
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: Forbidden access
-    #             '422':
-    #                 description: Bad request
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ResponseError'
-    #                                 - type: object
-    #                                   properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: pekerjaan is required
-    #             # '400':
-    #             #     description: Bad request
-    #             #     content:
-    #             #         application/json:
-    #             #             schema:
-    #             #                 allOf:
-    #             #                     - $ref: '#/components/schemas/ResponseError'
-    #             #                     - type: object
-    #             #                       properties:
-    #             #                           message:
-    #             #                               type: string
-    #             #                               example: OTP Code is expired
-    #             '200':
-    #                 description: Success verified borrower
-    #                 content:
-    #                     application/json:
-    #                         schema:
-    #                             allOf:
-    #                                 - $ref: '#/components/schemas/ApiResponse'
-    #                                 - type: object
-    #                                 - properties:
-    #                                       message:
-    #                                           type: string
-    #                                           example: Success verified borrower
-    #                                       data:
-    #                                           example: []
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Forbidden access
+                '422':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: pekerjaan is required
+                # '400':
+                #     description: Bad request
+                #     content:
+                #         application/json:
+                #             schema:
+                #                 allOf:
+                #                     - $ref: '#/components/schemas/ResponseError'
+                #                     - type: object
+                #                       properties:
+                #                           message:
+                #                               type: string
+                #                               example: OTP Code is expired
+                '200':
+                    description: Success verified borrower
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success verified borrower
+                                          data:
+                                              example: []
 
-    #         requestBody:
-    #             description: Payload
+            requestBody:
+                description: Payload
 
-    #             content:
-    #                 multipart/form-data:
-    #                     schema:
-    #                         type: object
-    #                         properties:
-    #                             personal:
-    #                                 type: object
-    #                                 properties:
-    #                                     fullName:
-    #                                         type: string
-    #                                         example: Eden Hazard
-    #                                     gender:
-    #                                         type: string
-    #                                         enum:
-    #                                             - Male
-    #                                             - Female
-    #                                     brithDate:
-    #                                         type: string
-    #                                         example: 1990-01-01
-    #                                     work:
-    #                                         type: object
-    #                                         properties:
-    #                                             name:
-    #                                                 type: string
-    #                                                 example: PNS
-    #                                             salary:
-    #                                                 type: integer
-    #                                                 example: 5000000
-    #                             relativesContact:
-    #                                 type: object
-    #                                 properties:
-    #                                     firstRelative:
-    #                                         type: object
-    #                                         properties:
-    #                                             name:
-    #                                                 type: string
-    #                                                 example: John Doe
-    #                                             relation:
-    #                                                 type: string
-    #                                                 example: Ibu
-    #                                             phoneNumber:
-    #                                                 type: string
-    #                                                 example: 628123456789
-    #                                     secondRelative:
-    #                                         type: object
-    #                                         properties:
-    #                                             name:
-    #                                                 type: string
-    #                                                 example: Toni
-    #                                             relation:
-    #                                                 type: string
-    #                                                 example: Anak
-    #                                             phoneNumber:
-    #                                                 type: string
-    #                                                 example: 628123456789
-    #                             idCardImage:
-    #                                 type: string
-    #                                 example: ''
-    #                             faceImage:
-    #                                 type: string
-    #                                 example: ''
-    #                     encoding: # The same level as schema
-    #                         idCardImage:
-    #                             contentType: image/png, image/jpeg
-    #                         faceImage:
-    #                             contentType: image/png, image/jpeg
-    #             required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                personal:
+                                    type: object
+                                    properties:
+                                        fullName:
+                                            type: string
+                                            example: Eden Hazard
+                                        gender:
+                                            type: string
+                                            enum:
+                                                - Male
+                                                - Female
+                                        brithDate:
+                                            type: string
+                                            example: 1990-01-01
+                                        idCardNumber:
+                                            type: string
+                                            example: 123456789098765
+                                        work:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                    example: PNS
+                                                salary:
+                                                    type: integer
+                                                    example: 5000000
+                                idCardImage:
+                                    type: string
+                                    example: ''
+                                faceImage:
+                                    type: string
+                                    example: ''
+                        encoding: # The same level as schema
+                            idCardImage:
+                                contentType: image/png, image/jpeg
+                            faceImage:
+                                contentType: image/png, image/jpeg
+                required: true
 
     /lenders/profile:
         get:
@@ -2610,6 +2587,9 @@ paths:
                                         brithDate:
                                             type: string
                                             example: 1990-01-01
+                                        idCardNumber:
+                                            type: string
+                                            example: 123456789098765
                                         work:
                                             type: object
                                             properties:
