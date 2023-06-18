@@ -1717,6 +1717,7 @@ paths:
                                           message:
                                               type: string
                                               example: Internal server error
+
                 '409':
                     description: Already funded
                     content:
@@ -1807,8 +1808,11 @@ paths:
                                               type: string
                                               example: success funding loan request
                                           data:
-                                              type: array
-                                              example: []
+                                              type: object
+                                              properties:
+                                                  contract:
+                                                      type: string
+                                                      example: 'https://ipfs.pdf'
             requestBody:
                 description: Payload request to funding loan request
                 content:
