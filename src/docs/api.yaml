@@ -24,13 +24,16 @@ info:
         | `Verification KYC data lender`                    | `✅Ready`
 
         <br/>
-        | LOANS                                         | Status       |
+        | LOANS                                            | Status       |
         | ------------------------------------------------ | ----------|
-        | `Get all available loans`                             | `✅Ready`
-        | `Get loan detail by loanId`                             | `✅Ready`
+        | `Get all available loans`                        | `✅Ready`
+        | `Get loan detail by loanId`                      | `✅Ready`
 
         <br/>
-        #### Balance: `❌`
+        | BALANCE                                         | Status       |
+        | ------------------------------------------------ | ----------|
+        | `Get balance of current user`                    | `✅Ready`
+        | `Top up balance`                                 | `✅Ready`
 
         ---
         ## Available users for testing
@@ -2065,19 +2068,20 @@ paths:
                                               type: string
                                               example: success get balance
                                           data:
-                                              allOf:
-                                                  - $ref: '#/components/schemas/Balance'
                                               type: object
-                                              #   properties:
+                                              properties:
+                                                  balance:
+                                                      type: integer
+                                                      example: 5000000
 
                                           meta: {}
 
     /balance/deposit:
-        get:
+        post:
             tags:
                 - balance
-            summary: Get deposit virtual account number
-            operationId: getDepositVA
+            summary: Top up balance
+            operationId: postDepositVA
             security:
                 - lender_auth: []
             responses:
@@ -2119,8 +2123,21 @@ paths:
                                               type: string
                                               example: Unauthorized access. Please login first.
 
+                '422':
+                    description: Validation error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: amount is required
+
                 '200':
-                    description: 'Available bank name: Bank Central Asia, CIMB Niaga, Mandiri, BNI, Permata, BRI, BSI'
+                    description: 'success top up balance'
                     content:
                         application/json:
                             schema:
@@ -2130,21 +2147,14 @@ paths:
                                     - properties:
                                           message:
                                               type: string
-                                              example: Success get deposit virtual account number
+                                              example: success top up balance
                                           data:
-                                              type: array
-                                              items:
-                                                  type: object
-                                                  properties:
-                                                      bankFullName:
-                                                          type: string
-                                                          example: Bank Central Asia
-                                                      bankCode:
-                                                          type: string
-                                                          example: BCA
-                                                      virtualAccountNumber:
-                                                          type: string
-                                                          example: 1234567890
+                                              type: object
+                                              properties:
+                                                  paymentLink:
+                                                      type: string
+                                                      example: flip.id/payment/123456789
+                                          meta: {}
 
     /balance/withdraw:
         post:
@@ -3286,7 +3296,7 @@ components:
         ApiResponse:
             type: object
             properties:
-                status:
+                success:
                     type: boolean
                 message:
                     type: string
@@ -3299,7 +3309,7 @@ components:
         ResponseError:
             type: object
             properties:
-                status:
+                success:
                     type: boolean
                     example: false
                 message:
