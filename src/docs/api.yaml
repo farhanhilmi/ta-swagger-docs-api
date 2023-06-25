@@ -2156,6 +2156,18 @@ paths:
                                                       example: flip.id/payment/123456789
                                           meta: {}
 
+            requestBody:
+                description: Payload request to deposit balance
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                amount:
+                                    type: number
+                                    example: 100000
+                required: true
+
     /balance/withdraw:
         post:
             tags:
