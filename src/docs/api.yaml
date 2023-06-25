@@ -2156,6 +2156,18 @@ paths:
                                                       example: flip.id/payment/123456789
                                           meta: {}
 
+            requestBody:
+                description: Payload request to deposit balance
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                amount:
+                                    type: number
+                                    example: 100000
+                required: true
+
     /balance/withdraw:
         post:
             tags:
@@ -2368,12 +2380,12 @@ paths:
                                               items:
                                                   type: object
                                                   properties:
-                                                      bankId:
+                                                      _id:
                                                           type: string
                                                           example: 5f9b2b3b5f9b2b3b5f9b2b3b
-                                                      bankName:
-                                                          type: string
-                                                          example: Bank Central Asia
+                                                      #   bankName:
+                                                      #       type: string
+                                                      #       example: Bank Central Asia
                                                       bankCode:
                                                           type: string
                                                           example: BCA
@@ -2634,6 +2646,84 @@ paths:
                                     type: string
                                     example: BCA
                 required: true
+
+    /balance/banks:
+        get:
+            tags:
+                - balance
+            summary: 'Get all bank available'
+            operationId: getBanks
+            security:
+                - lender_auth: []
+                - borrower_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get bank code
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get bank info
+                                          data:
+                                              type: array
+                                              items:
+                                                  type: object
+                                                  properties:
+                                                      bank_code:
+                                                          type: string
+                                                          example: mandiri
+                                                      name:
+                                                          type: string
+                                                          example: Mandiri
+                                                      fee:
+                                                          type: integer
+                                                          example: 0
+                                                      status:
+                                                          type: string
+                                                          example: OPERATIONAL
+                                                      queue:
+                                                          type: integer
+                                                          example: 33582
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
 
     /borrowers/request/verification:
         put:
