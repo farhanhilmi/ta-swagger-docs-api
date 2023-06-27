@@ -2383,9 +2383,9 @@ paths:
                                                       _id:
                                                           type: string
                                                           example: 5f9b2b3b5f9b2b3b5f9b2b3b
-                                                      #   bankName:
-                                                      #       type: string
-                                                      #       example: Bank Central Asia
+                                                      bankName:
+                                                          type: string
+                                                          example: Bank Central Asia
                                                       bankCode:
                                                           type: string
                                                           example: BCA
@@ -2502,19 +2502,20 @@ paths:
                                               example: Success add new bank account
                                           data:
                                               type: object
-                                              properties:
-                                                  bankFullName:
-                                                      type: string
-                                                      example: Bank Central Asia
-                                                  bankCode:
-                                                      type: string
-                                                      example: BCA
-                                                  accountNumber:
-                                                      type: string
-                                                      example: 1234567890
-                                                  onBehalf:
-                                                      type: string
-                                                      example: John Doe
+                                              example: []
+                                              #   properties:
+                                              #       bankName:
+                                              #           type: string
+                                              #           example: Bank Central Asia
+                                              #       bankCode:
+                                              #           type: string
+                                              #           example: BCA
+                                              #       accountNumber:
+                                              #           type: string
+                                              #           example: 1234567890
+                                              #       onBehalf:
+                                              #           type: string
+                                              #           example: John Doe
 
             requestBody:
                 description: Payload request to add new bank account
@@ -2529,6 +2530,123 @@ paths:
                                 bankCode:
                                     type: string
                                     example: BCA
+                                bankName:
+                                    type: string
+                                    example: Bank Central Asia
+                required: true
+
+        delete:
+            tags:
+                - balance
+            summary: Delete bank account
+            operationId: delteBankAccount
+            security:
+                - lender_auth: []
+                - borrower_auth: []
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+                '409':
+                    description: Already exist
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Bank account already exist
+
+                '404':
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: We can't find this account number. Please check again.
+
+                '403':
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not a lender
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '422':
+                    description: Validation Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: AccountNumber field(s) is required
+
+                '200':
+                    description: Success delete bank account
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success delete bank account
+                                          data:
+                                              type: object
+                                              example: []
+
+            requestBody:
+                description: Payload request to add new bank account
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                accountNumber:
+                                    type: number
+                                    example: 123456789
                 required: true
 
         put:
