@@ -2843,6 +2843,122 @@ paths:
                                                       type: integer
                                                       example: 100
 
+    /balance/transaction/history:
+        get:
+            tags:
+                - balance
+            summary: 'Get all transaction history'
+            operationId: getTransaction
+            security:
+                - lender_auth: []
+                - borrower_auth: []
+            parameters:
+                - in: query
+                  name: limit
+                  description: limit data per page
+                  schema:
+                      type: integer
+                      example: 10
+                - in: query
+                  name: page
+                  description: page number
+                  schema:
+                      type: integer
+                      example: 1
+                - in: query
+                  name: sort
+                  description: sort data by field
+                  schema:
+                      type: string
+                      example: createdDate
+                - in: query
+                  name: order
+                  description: order data by asc or desc
+                  schema:
+                      type: string
+                      example: desc
+                - in: query
+                  name: type
+                  description: 'filter data by transaction type. Available value: deposit, withdraw, repayment'
+                  schema:
+                      type: string
+                      example: deposit
+                - in: query
+                  name: status
+                  description: 'filter data by transaction status. Available value: done, pending, cancel'
+                  schema:
+                      type: string
+                      example: done
+
+            responses:
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: Internal server error
+
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ResponseError'
+                                    - type: object
+                                      properties:
+                                          message:
+                                              type: string
+                                              example: You are not authorized. Please login first to access this page.
+
+                '200':
+                    description: Success get data
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/ApiResponse'
+                                    - type: object
+                                    - properties:
+                                          message:
+                                              type: string
+                                              example: Success get data
+                                          data:
+                                              type: array
+                                              items:
+                                                  type: object
+                                                  properties:
+                                                      transactionId:
+                                                          type: string
+                                                          example: 648809a60e51f774902f1653-1687698828339g8yysp
+                                                      status:
+                                                          type: string
+                                                          example: done
+                                                      type:
+                                                          type: string
+                                                          example: Withdraw
+                                                      amount:
+                                                          type: string
+                                                          example: 50000
+                                                      createdDate:
+                                                          type: string
+                                                          example: 2021-07-01T07:00:00.000Z
+                                          meta:
+                                              type: object
+                                              properties:
+                                                  pagination:
+                                                      allOf:
+                                                          - $ref: '#/components/schemas/PaginationResponse'
+                                                  totalItems:
+                                                      type: integer
+                                                      example: 100
+
     /borrowers/request/verification:
         put:
             externalDocs:
