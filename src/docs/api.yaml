@@ -1096,7 +1096,7 @@ paths:
                                                                               type: integer
                                                                               example: 0
 
-    /loans/recommended/:
+    /loans/available/recommended:
         get:
             tags:
                 - loans
