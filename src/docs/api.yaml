@@ -28,12 +28,18 @@ info:
         | ------------------------------------------------ | ----------|
         | `Get all available loans`                        | `✅Ready`
         | `Get loan detail by loanId`                      | `✅Ready`
+        | `Get all recommended loans`                      | `✅Ready`
 
         <br/>
         | BALANCE                                         | Status       |
         | ------------------------------------------------ | ----------|
         | `Get balance of current user`                    | `✅Ready`
         | `Top up balance`                                 | `✅Ready`
+        | `Withdraw balance`                               | `✅Ready`
+        | `Get all transaction history`                    | `✅Ready`
+        | `Delete bank account`                            | `✅Ready`
+        | `Add bank account`                               | `✅Ready`
+        | `Get all bank available`                         | `✅Ready`
 
         ---
         ## Available users for testing
@@ -1090,7 +1096,7 @@ paths:
                                                                               type: integer
                                                                               example: 0
 
-    /loans/recommended/:userId:
+    /loans/available/recommended:
         get:
             tags:
                 - loans
